@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">ToDoListApp</string>
+    <string name="app_name">To-Do-List</string>
+
+    <string name="dialog_no_tasks_title">Witaj Użytkowniku!</string>
+    <string name="dialog_no_tasks_message">Na liście nie ma obecnie żadnego zadania. Aby dodać nowe, zamknij to okno i kliknij przycisk Dodaj nowe zadanie.</string>
+    <string name="dialog_positive_button_text">OK</string>
+
+    <string-array name="categories">
+        <item>Praca</item>
+        <item>Zakupy</item>
+        <item>Inne</item>
+    </string-array>
+
 </resources>
