@@ -30,10 +30,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String FILE_WITH_TASKS = "tasks.txt";
 
     private List<SingleTask> tasks;
-    private SingleTask singleTask;
-
     private Context context;
 
+    private RecyclerView recyclerView;
     @BindView(R.id.addNewTaskButton)
     protected Button addNewTaskButton;
 
@@ -46,14 +45,40 @@ public class MainActivity extends AppCompatActivity {
 
         context = this;
         tasks = new ArrayList<>();
+        setRecyclerViewProperties();
+        getTasksList();
     }
 
     @OnClick(R.id.addNewTaskButton)
-    public void onAddNewTaskButtonClick() {
+    public void onAddNewTaskButtonClick() { }
 
+    private void setRecyclerViewProperties() {
+        recyclerView = findViewById(R.id.recycler_view_tasks);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    public List getTasksFromFile() throws IOException {
+    private void getTasksList() {
+        File file = new File(getApplicationContext().getFilesDir(),FILE_WITH_TASKS);
+        if (file.exists() && !(file.length() == 0)) {
+            try {
+                getTasksFromFile();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            setRecyclerViewContent();
+        }
+        else {
+            showDialog();
+        }
+    }
+
+    private void setRecyclerViewContent() {
+        TasksAdapter tasksAdapter = new TasksAdapter(MainActivity.this, (ArrayList<SingleTask>) tasks);
+        recyclerView.setAdapter(tasksAdapter);
+    }
+
+    public void getTasksFromFile() throws IOException {
         tasks.clear();
 
         FileInputStream fileInputStream = openFileInput(FILE_WITH_TASKS);
@@ -63,21 +88,14 @@ public class MainActivity extends AppCompatActivity {
         String line;
         while((line = bufferedReader.readLine()) != null){
             String [] separatedAttributes = line.split(DATA_READ_ATTRIBUTES_SEPARATOR);
-            singleTask = new SingleTask();
+            SingleTask singleTask = new SingleTask();
             singleTask.setTitle(separatedAttributes[0]);
             singleTask.setDate(separatedAttributes[1]);
             singleTask.setCategory(separatedAttributes[2]);
             tasks.add(singleTask);
         }
 
-        for (SingleTask task : tasks) {
-            System.out.println(task.getTitle());
-            System.out.println(task.getDate());
-            System.out.println(task.getCategory());
-        }
-
         fileInputStream.close();
-        return tasks;
     }
 
     private void showDialog() {
