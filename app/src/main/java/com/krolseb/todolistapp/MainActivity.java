@@ -2,6 +2,7 @@ package com.krolseb.todolistapp;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -50,7 +51,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.addNewTaskButton)
-    public void onAddNewTaskButtonClick() { }
+    public void onAddNewTaskButtonClick() {
+        Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     private void setRecyclerViewProperties() {
         recyclerView = findViewById(R.id.recycler_view_tasks);
