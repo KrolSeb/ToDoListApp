@@ -1,17 +1,17 @@
 package com.krolseb.todolistapp.model;
 
-public class SingleTask {
+public class Task {
     private String title;
     private String date;
     private String category;
 
-    public SingleTask(String title, String date, String category) {
+    public Task(String title, String date, String category) {
         this.title = title;
         this.date = date;
         this.category = category;
     }
 
-    public SingleTask() { }
+    public Task() { }
 
     public void setTitle(String title) {
         this.title = title;

@@ -8,12 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class TasksViewHolder extends RecyclerView.ViewHolder {
+public class RecyclerViewTaskViewHolder extends RecyclerView.ViewHolder {
     private TextView titleTextView;
     private TextView dateTextView;
     private TextView categoryTextView;
 
-    TasksViewHolder(@NonNull View itemView) {
+    RecyclerViewTaskViewHolder(@NonNull View itemView) {
         super(itemView);
         titleTextView = itemView.findViewById(R.id.titleTextView);
         dateTextView = itemView.findViewById(R.id.dateTextView);
