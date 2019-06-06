@@ -5,6 +5,10 @@
     <string name="dialog_no_tasks_message">Na liście nie ma obecnie żadnego zadania. Aby dodać nowe, zamknij to okno i kliknij przycisk Dodaj nowe zadanie.</string>
     <string name="dialog_positive_button_text">OK</string>
 
+    <string name="toast_add_task_success_text">Pomyślnie dodano nowe zadanie</string>
+    <string name="dialog_cannot_add_task_title">Nie można dodać zadania</string>
+    <string name="dialog_cannot_add_task_message">Aby kontynuować, uzupełnij wszystkie dane</string>
+
     <string-array name="categories">
         <item>Praca</item>
         <item>Zakupy</item>
