@@ -24,6 +24,20 @@
         app:layout_constraintRight_toLeftOf="@id/guidelineVertical4"
         app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal1" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_tasks"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        android:scrollbars="vertical"
+        android:scrollbarThumbVertical="@android:color/darker_gray"
+        android:scrollbarSize="5dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal4"
+        app:layout_constraintLeft_toRightOf="@id/guidelineVertical1"
+        app:layout_constraintRight_toLeftOf="@id/guidelineVertical4"
+        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal3">
+    </androidx.recyclerview.widget.RecyclerView>
+
     <Button
         android:id="@+id/addNewTaskButton"
         android:layout_width="0sp"
