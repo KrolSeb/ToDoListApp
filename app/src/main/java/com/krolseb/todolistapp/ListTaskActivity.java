@@ -6,18 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.krolseb.todolistapp.adapters.TasksAdapter;
-import com.krolseb.todolistapp.model.SingleTask;
+import com.krolseb.todolistapp.adapters.RecyclerViewTaskAdapter;
+import com.krolseb.todolistapp.model.FileService;
+import com.krolseb.todolistapp.model.Task;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +23,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MainActivity extends AppCompatActivity {
-    private static final String DATA_READ_ATTRIBUTES_SEPARATOR = "\\|";
-    private static final String FILE_WITH_TASKS = "tasks.txt";
-
-    private List<SingleTask> tasks;
+public class ListTaskActivity extends AppCompatActivity {
+    private List<Task> tasks;
     private Context context;
+    private FileService fileService;
 
     private RecyclerView recyclerView;
     @BindView(R.id.addNewTaskButton)
@@ -41,10 +36,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_list_task);
         ButterKnife.bind(this);
 
         context = this;
+        fileService = new FileService(context);
         tasks = new ArrayList<>();
         setRecyclerViewProperties();
         getTasksList();
@@ -52,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.addNewTaskButton)
     public void onAddNewTaskButtonClick() {
-        Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
+        Intent intent = new Intent(ListTaskActivity.this, AddTaskActivity.class);
         startActivity(intent);
         finish();
     }
@@ -63,10 +59,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getTasksList() {
-        File file = new File(getApplicationContext().getFilesDir(),FILE_WITH_TASKS);
-        if (file.exists() && !(file.length() == 0)) {
+        if (fileService.isFileExists()) {
             try {
-                getTasksFromFile();
+                tasks = fileService.readTasksFromFile();
             }
             catch (IOException e) {
                 e.printStackTrace();
@@ -79,28 +74,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setRecyclerViewContent() {
-        TasksAdapter tasksAdapter = new TasksAdapter(MainActivity.this, (ArrayList<SingleTask>) tasks);
-        recyclerView.setAdapter(tasksAdapter);
-    }
-
-    public void getTasksFromFile() throws IOException {
-        tasks.clear();
-
-        FileInputStream fileInputStream = openFileInput(FILE_WITH_TASKS);
-        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-        String line;
-        while((line = bufferedReader.readLine()) != null){
-            String [] separatedAttributes = line.split(DATA_READ_ATTRIBUTES_SEPARATOR);
-            SingleTask singleTask = new SingleTask();
-            singleTask.setTitle(separatedAttributes[0]);
-            singleTask.setDate(separatedAttributes[1]);
-            singleTask.setCategory(separatedAttributes[2]);
-            tasks.add(singleTask);
-        }
-
-        fileInputStream.close();
+        RecyclerViewTaskAdapter recyclerViewTaskAdapter = new RecyclerViewTaskAdapter(ListTaskActivity.this, (ArrayList<Task>) tasks);
+        recyclerView.setAdapter(recyclerViewTaskAdapter);
     }
 
     private void showDialog() {
@@ -109,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private AlertDialog createDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ListTaskActivity.this);
         builder.setTitle(context.getResources().getString(R.string.dialog_no_tasks_title));
         builder.setMessage(context.getResources().getString(R.string.dialog_no_tasks_message));
         builder.setCancelable(false);

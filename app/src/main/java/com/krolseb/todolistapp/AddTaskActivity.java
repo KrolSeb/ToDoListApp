@@ -14,10 +14,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import com.krolseb.todolistapp.model.SingleTask;
+
+import com.krolseb.todolistapp.model.FileService;
+import com.krolseb.todolistapp.model.Task;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -31,10 +32,6 @@ import butterknife.OnClick;
 
 
 public class AddTaskActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    private static final String DATA_WRITE_ATTRIBUTES_SEPARATOR = "|";
-    private static final String NEW_LINE_SEPARATOR = "line.separator";
-    private static final String FILE_WITH_TASKS = "tasks.txt";
-
     private static final String DATE_ATTRIBUTES_SEPARATOR = "/";
     private static final String DATE_FORMAT = "d/M/yyyy";
     private static final String TIME_FORMAT = "%02d:%02d";
@@ -65,6 +62,7 @@ public class AddTaskActivity extends AppCompatActivity implements AdapterView.On
     private List<String> categories;
 
     private Context context;
+    private FileService fileService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +71,7 @@ public class AddTaskActivity extends AppCompatActivity implements AdapterView.On
         ButterKnife.bind(this);
 
         context = this;
+        fileService = new FileService(context);
         setCategories();
         setSpinnerElements();
     }
@@ -145,9 +144,9 @@ public class AddTaskActivity extends AppCompatActivity implements AdapterView.On
     public void onNothingSelected(AdapterView<?> parent) { }
 
 
-    public void addTaskToFile(SingleTask singleTask)  {
+    public void addTaskToFile(Task task)  {
         try {
-            writeDataToFile(singleTask);
+            fileService.writeTaskToFile(task);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -157,14 +156,6 @@ public class AddTaskActivity extends AppCompatActivity implements AdapterView.On
 
     private void showToast(String message) {
         Toast.makeText(this,message, Toast.LENGTH_LONG).show();
-    }
-
-    private void writeDataToFile(SingleTask singleTask) throws IOException {
-        FileOutputStream fileOutputStream = openFileOutput(FILE_WITH_TASKS, MODE_PRIVATE | MODE_APPEND);
-        fileOutputStream.write((singleTask.getTitle() + DATA_WRITE_ATTRIBUTES_SEPARATOR +
-                singleTask.getDate() + DATA_WRITE_ATTRIBUTES_SEPARATOR + singleTask.getCategory()).getBytes());
-        fileOutputStream.write(System.getProperty(NEW_LINE_SEPARATOR).getBytes());
-        fileOutputStream.close();
     }
 
     private boolean isDataExists() {
@@ -177,11 +168,11 @@ public class AddTaskActivity extends AppCompatActivity implements AdapterView.On
         setDate();
 
         if (isDataExists()) {
-            SingleTask singleTask = new SingleTask();
-            singleTask.setTitle(title);
-            singleTask.setDate(date);
-            singleTask.setCategory(category);
-            addTaskToFile(singleTask);
+            Task task = new Task();
+            task.setTitle(title);
+            task.setDate(date);
+            task.setCategory(category);
+            addTaskToFile(task);
         }
         else {
             showDialog();
@@ -207,7 +198,7 @@ public class AddTaskActivity extends AppCompatActivity implements AdapterView.On
 
     @OnClick(R.id.abortButton)
     public void onAbortButtonClick() {
-        Intent intent = new Intent(AddTaskActivity.this, MainActivity.class);
+        Intent intent = new Intent(AddTaskActivity.this, ListTaskActivity.class);
         startActivity(intent);
         finish();
     }
