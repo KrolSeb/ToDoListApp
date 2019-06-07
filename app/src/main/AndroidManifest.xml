@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".ListTaskActivity">
+        <activity android:name=".view.ListTaskActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -23,7 +23,7 @@
         </activity>
 
         <activity
-            android:name="com.krolseb.todolistapp.AddTaskActivity">
+            android:name=".view.AddTaskActivity">
         </activity>
 
 
